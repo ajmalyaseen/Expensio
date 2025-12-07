@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up - Expensio{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center min-h-[80vh]">
+    <div class="w-full max-w-md bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-2xl">
+        
+        <h2 class="text-3xl font-bold text-white mb-6 text-center">Create Account 🚀</h2>
+<form method="POST">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="mb-4">
+                <label class="block text-gray-400 text-sm mb-2 capitalize">
+                    {{ field.label }}
+                </label>
+                
+                {{ field }}
+                
+                {% if field.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="w-full mt-2 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition duration-200">
+                Sign Up 
+            </button>
+        </form>
+
+        <p class="text-gray-400 text-center mt-4 text-sm">
+            Already have an account? 
+            <a href="{% url 'login' %}" class="text-green-500 hover:underline">Login here</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}History - Expensio{% endblock %}
+
+{% block content %}
+
+<div class="container mx-auto max-w-3xl px-4 py-6">
+    
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-white">History 📜</h2>
+        <span class="text-xs text-gray-500">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    </div>
+
+    <div class="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden min-h-[400px]">
+        
+        {% for t in page_obj %}
+        <div class="flex justify-between items-center py-3 px-4 border-b border-gray-800 last:border-0 hover:bg-gray-800/50 transition group">
+            
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold
+                            {% if t.category.type == 'Income' %}bg-green-900/20 text-green-500
+                            {% else %}bg-red-900/20 text-red-500{% endif %}">
+                    {% if t.category.type == 'Income' %}↗{% else %}↘{% endif %}
+                </div>
+
+                <div>
+                    <p class="text-white text-sm font-medium">{{ t.category.name }}</p>
+                    <div class="flex gap-2 text-[10px] text-gray-500">
+                        <span>{{ t.date|date:"M d, Y" }}</span>
+                        {% if t.notes %}
+                            <span class="text-gray-600">• {{ t.notes|truncatechars:20 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <p class="font-bold text-sm {% if t.category.type == 'Income' %}text-green-500{% else %}text-red-500{% endif %}">
+                    {% if t.category.type == 'Income' %}+{% else %}-{% endif %}{{ t.amount }}
+                </p>
+                
+                <a href="{% url 'edit_transaction' t.id %}" class="text-gray-600 hover:text-white transition opacity-50 group-hover:opacity-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                    </svg>
+                </a>
+            </div>
+
+        </div>
+        {% empty %}
+            <div class="flex flex-col items-center justify-center py-12 text-gray-500">
+                <p class="text-sm">No transactions found.</p>
+            </div>
+        {% endfor %}
+
+    </div>
+
+    <div class="flex justify-center items-center mt-6 gap-4">
+        
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="text-xs text-gray-400 hover:text-white transition flex items-center gap-1">
+                ⬅️ Prev
+            </a>
+        {% else %}
+            <span class="text-xs text-gray-700 cursor-not-allowed">⬅️ Prev</span>
+        {% endif %}
+
+        <span class="text-gray-600 text-[10px]">●</span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="text-xs text-gray-400 hover:text-white transition flex items-center gap-1">
+                Next ➡️
+            </a>
+        {% else %}
+             <span class="text-xs text-gray-700 cursor-not-allowed">Next ➡️</span>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

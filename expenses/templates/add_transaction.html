@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if form.instance.pk %}Edit{% else %}New{% endif %} Transaction - Expensio
+{% endblock %}
+
+{% block content %}
+
+<div class="flex justify-center items-center min-h-[80vh]">
+    
+    <div class="w-full max-w-md bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-xl">
+        
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold text-white">
+                {% if form.instance.pk %}Edit Transaction{% else %}New Transaction{% endif %}
+            </h2>
+            <a href="{% url 'index' %}" class="text-gray-500 hover:text-white transition text-xl">✕</a>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-4">
+                <div class="flex justify-between items-center mb-1">
+                    <label class="text-gray-500 text-xs font-bold uppercase tracking-wider">Category</label>
+                    <a href="{% url 'add_category' %}" class="text-[10px] text-green-500 hover:text-white transition">+ New Category</a>
+                </div>
+                {{ form.category }} 
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                
+                <div>
+                    <label class="block text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Date</label>
+                    {{ form.date }}
+                </div>
+
+                <div>
+                    <label class="block text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Amount (₹)</label>
+                    {{ form.amount }}
+                </div>
+
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Notes</label>
+                {{ form.notes }}
+            </div>
+
+            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-lg transition duration-200 shadow-lg">
+                {% if form.instance.pk %}Update{% else %}Save Record{% endif %}
+            </button>
+
+            {% if form.instance.pk %}
+            <div class="mt-3 text-center">
+                <a href="{% url 'delete_transaction' form.instance.pk %}" 
+                   onclick="return confirm('Delete this transaction?');"
+                   class="text-xs text-red-500 hover:text-red-400 hover:underline transition">
+                    Delete Transaction
+                </a>
+            </div>
+            {% endif %}
+
+        </form>
+    </div>
+
+</div>
+
+{% endblock %}
